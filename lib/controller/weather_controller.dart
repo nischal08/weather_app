@@ -1,12 +1,22 @@
 import 'package:flutter/widgets.dart';
-import 'package:weather_app/services/location.dart';
+import 'package:weather_app/models/WeatherResponse.dart';
+import 'package:weather_app/services/weather_api.dart';
 
 class WeatherController extends ChangeNotifier {
+  List<WeatherResponse> weatherData;
   Future<void> getLocationData({context}) async {
-    print("Weather controller: getLocationData");
-    await Location().getLocation(context: context);
-    print(Location().latitude.toString() + "\n");
-    print(Location().longitude.toString() + "\n");
-    Navigator.pushNamed(context, '/home');
+    weatherData = await WeatherApi().getLocationWeather();
+    Navigator.pushNamed(context, '/home', arguments: weatherData);
+  }
+
+  String _cityName;
+
+  void setCityName(val) {
+    _cityName = val;
+    notifyListeners();
+  }
+  String getCityName() {
+    return _cityName;
+   
   }
 }

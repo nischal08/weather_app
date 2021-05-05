@@ -25,10 +25,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: LoadingScreen.routeName,
       routes: {
-        '/': (context) => LoadingScreen(),
-        '/home': (context) => HomeScreen(),
+        LoadingScreen.routeName: (context) => LoadingScreen(),
+        HomeScreen.routeName: (context) => HomeScreen(),
       },
     );
   }

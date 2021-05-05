@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:weather_app/controller/weather_controller.dart';
 
 class LoadingScreen extends StatefulWidget {
+  static const routeName = '/';
   LoadingScreen({Key key}) : super(key: key);
 
   @override
@@ -14,9 +15,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
   // WeatherController _weatherStateController;
   @override
   void initState() {
-    
     super.initState();
-    Provider.of<WeatherController>(context,listen: false).getLocationData(context: context);
+    Provider.of<WeatherController>(context, listen: false)
+        .getLocationData(context: context);
   }
 
   @override
