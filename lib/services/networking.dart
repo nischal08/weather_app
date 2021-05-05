@@ -21,19 +21,6 @@ class NetworkHelper {
         var jsonString = response.body;
         var jsonDecoded = await json.decode(jsonString);
         weatherModel = WeatherResponseModel.fromJson(jsonDecoded);
-        // values = await jsonDecoded['data'];
-        // cityName = await jsonDecoded['city_name'];
-
-        // if (values.length > 0) {
-        //   for (var i = 0; i < values.length; i++) {
-        //     Map<String, dynamic> map = values[i];
-        //     print("/// From weatherModell All Network helper ///");
-        //     weatherModel.add(
-        //       WeatherResponse.fromJson(map),
-        //     );
-        //     print("/// From weatherModell All Network helper ///");
-        //   }
-        // }
         return weatherModel;
       } else {
         print("Error:${response.statusCode}");

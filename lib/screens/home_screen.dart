@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/models/WeatherResponseModel.dart';
@@ -11,11 +10,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     weatherModel = ModalRoute.of(context).settings.arguments;
-    // print("From home_screen" + args[0].appMaxTemp.toString());
     return Scaffold(
-    
-extendBodyBehindAppBar: true,
-      // backgroundColor: Theme.of(context).primaryColor.withRed(105),
+      extendBodyBehindAppBar: true,
       appBar: _appBar(context),
       body: _body(context),
     );
@@ -106,20 +102,23 @@ extendBodyBehindAppBar: true,
   Container _weeksWeatherForcast(context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.32 - 5,
-      child: ListView.builder(
-       
-        itemCount: weatherModel.data.length,
-        itemBuilder: (context, index) {
-          return _dayWeatherInfo(
-              context: context,
-              dayLabel:
-                  DateFormat.EEEE().format(weatherModel.data[index].datetime),
-              iconText: WeatherApi().getWeatherIcon(
-                weatherModel.data[index].weather.code,
-              ),
-              highTemp: weatherModel.data[index].appMaxTemp,
-              lowTemp: weatherModel.data[index].appMinTemp);
-        },
+      child: MediaQuery.removePadding(
+        removeTop: true,
+        context: context,
+        child: ListView.builder(
+          itemCount: weatherModel.data.length,
+          itemBuilder: (context, index) {
+            return _dayWeatherInfo(
+                context: context,
+                dayLabel:
+                    DateFormat.EEEE().format(weatherModel.data[index].datetime),
+                iconText: WeatherApi().getWeatherIcon(
+                  weatherModel.data[index].weather.code,
+                ),
+                highTemp: weatherModel.data[index].appMaxTemp,
+                lowTemp: weatherModel.data[index].appMinTemp);
+          },
+        ),
       ),
     );
   }
@@ -149,7 +148,6 @@ extendBodyBehindAppBar: true,
 
   Widget _dayWeatherInfo({context, dayLabel, highTemp, lowTemp, iconText}) {
     return Container(
-      alignment: Alignment.topCenter,
       padding: EdgeInsets.symmetric(vertical: 15),
       child: Row(
         children: [
@@ -163,9 +161,9 @@ extendBodyBehindAppBar: true,
             ),
           ),
           Expanded(
-              flex: 1,
-              child:
-                  Text(iconText, style: Theme.of(context).textTheme.headline5)),
+            flex: 1,
+            child: Text(iconText, style: Theme.of(context).textTheme.headline5),
+          ),
           Expanded(flex: 2, child: _tempRow(highTemp, context, lowTemp))
         ],
       ),
