@@ -1,4 +1,4 @@
-import 'package:weather_app/models/WeatherResponse.dart';
+import 'package:weather_app/models/WeatherResponseModel.dart';
 import 'package:weather_app/services/location.dart';
 import 'package:weather_app/services/networking.dart';
 import 'package:weather_app/utils/api_endpoints.dart';
@@ -16,7 +16,7 @@ class WeatherApi {
           "$baseUrl?lat=${location.latitude}&lon=${location.longitude}&days=$totalForcastDays&key=$apiKey",
     );
 
-    List<WeatherResponse> weatherData =
+    WeatherResponseModel weatherData =
         await networkHelper.getWeatherResponse();
     return weatherData;
   }

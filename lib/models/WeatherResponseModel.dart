@@ -1,15 +1,55 @@
 // To parse this JSON data, do
 //
-//     final weatherResponse = weatherResponseFromJson(jsonString);
+//     final weatherResponseModel = weatherResponseModelFromJson(jsonString);
 
 import 'dart:convert';
 
-WeatherResponse weatherResponseFromJson(String str) => WeatherResponse.fromJson(json.decode(str));
+WeatherResponseModel weatherResponseModelFromJson(String str) => WeatherResponseModel.fromJson(json.decode(str));
 
-String weatherResponseToJson(WeatherResponse data) => json.encode(data.toJson());
+String weatherResponseModelToJson(WeatherResponseModel data) => json.encode(data.toJson());
 
-class WeatherResponse {
-    WeatherResponse({
+class WeatherResponseModel {
+    WeatherResponseModel({
+        this.data,
+        this.cityName,
+        this.lon,
+        this.timezone,
+        this.lat,
+        this.countryCode,
+        this.stateCode,
+    });
+
+    final List<Datum> data;
+    final String cityName;
+    final double lon;
+    final String timezone;
+    final double lat;
+    final String countryCode;
+    final String stateCode;
+
+    factory WeatherResponseModel.fromJson(Map<String, dynamic> json) => WeatherResponseModel(
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        cityName: json["city_name"],
+        lon: json["lon"].toDouble(),
+        timezone: json["timezone"],
+        lat: json["lat"].toDouble(),
+        countryCode: json["country_code"],
+        stateCode: json["state_code"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "city_name": cityName,
+        "lon": lon,
+        "timezone": timezone,
+        "lat": lat,
+        "country_code": countryCode,
+        "state_code": stateCode,
+    };
+}
+
+class Datum {
+    Datum({
         this.moonriseTs,
         this.windCdir,
         this.rh,
@@ -89,7 +129,7 @@ class WeatherResponse {
     final int cloudsMid;
     final int cloudsLow;
 
-    factory WeatherResponse.fromJson(Map<String, dynamic> json) => WeatherResponse(
+    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         moonriseTs: json["moonrise_ts"],
         windCdir: json["wind_cdir"],
         rh: json["rh"],
