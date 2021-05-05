@@ -303,7 +303,7 @@ extendBodyBehindAppBar: true,
       children: [
         Icon(
           Icons.my_location,
-          color: Colors.white38,
+          color: Colors.white70,
           size: 20,
         ),
         SizedBox(
