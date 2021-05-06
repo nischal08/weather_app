@@ -1,23 +1,34 @@
-import 'package:weather_app/models/WeatherResponseModel.dart';
+import 'package:flutter/material.dart';
+import 'package:weather_app/models/weather_city_response_model.dart';
+import 'package:weather_app/models/weather_response_model.dart';
 import 'package:weather_app/services/location.dart';
 import 'package:weather_app/services/networking.dart';
 import 'package:weather_app/utils/api_endpoints.dart';
 
 class WeatherApi {
-  Future getLocationWeather() async {
-    print("Weather controller: getLocationData");
+  Future getCityLocationWeather({String cityName}) async {
+    print("Weather api: getCityWeatherData");
+    debugPrint( "$baseUrl?city=$cityName&country=np&days=$totalForcastDays&key=$apiKey");
+    NetworkHelper networkHelper = new NetworkHelper(
+      url:
+          "$baseUrl?city=$cityName&country=np&days=$totalForcastDays&key=$apiKey",
+    );
+
+    WeatherCityResponseModel weatherData = await networkHelper.getCityWeatherResponse();
+    return weatherData;
+  }
+
+  Future getGeoLocationWeather() async {
+    print("Weather api: getLocationData");
     Location location = Location();
     await location.getGeoLocation();
-    // print("Weather controller: Location Detail:");
-    // print(location.latitude.toString() + "\n");
-    // print(location.longitude.toString() + "\n");
+
     NetworkHelper networkHelper = new NetworkHelper(
       url:
           "$baseUrl?lat=${location.latitude}&lon=${location.longitude}&days=$totalForcastDays&key=$apiKey",
     );
 
-    WeatherResponseModel weatherData =
-        await networkHelper.getWeatherResponse();
+    WeatherResponseModel weatherData = await networkHelper.getWeatherResponse();
     return weatherData;
   }
 

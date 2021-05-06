@@ -1,4 +1,3 @@
-
 import 'package:geolocator/geolocator.dart';
 
 class Location {
@@ -33,8 +32,8 @@ class Location {
       latitude = position.latitude;
       longitude = position.longitude;
 
-      print("latitude" + latitude.toString());
-      print("longitude" + longitude.toString());
+      print("latitude: ${latitude.toString()}");
+      print("longitude: ${longitude.toString()}");
     } catch (e) {
       print(e);
     }

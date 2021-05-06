@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/models/WeatherResponseModel.dart';
 import 'package:weather_app/services/weather_api.dart';
 import 'package:weather_app/widgets/icon_with_text_row.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
-  WeatherResponseModel weatherModel;
+  var weatherModel;
   @override
   Widget build(BuildContext context) {
     weatherModel = ModalRoute.of(context).settings.arguments;
@@ -28,11 +27,13 @@ class HomeScreen extends StatelessWidget {
                 'images/location_background.jpg',
               ),
               fit: BoxFit.cover)),
-      child: Column(
-        children: [
-          _upperWeatherDetail(context),
-          _lowerWeatherDetail(context),
-        ],
+      child: SingleChildScrollView(
+              child: Column(
+          children: [
+            _upperWeatherDetail(context),
+            _lowerWeatherDetail(context),
+          ],
+        ),
       ),
     );
   }
@@ -241,7 +242,8 @@ class HomeScreen extends StatelessWidget {
     return Column(
       children: [
         Text(
-          WeatherApi().getWeatherIcon(weatherModel.data.first.weather.code),
+          WeatherApi()
+              .getWeatherIcon(weatherModel.data.first.weather.code.toInt()),
           style: TextStyle(fontSize: 100),
         ),
         SizedBox(
@@ -267,13 +269,34 @@ class HomeScreen extends StatelessWidget {
 
   AppBar _appBar(context) {
     return AppBar(
+      centerTitle: true,
       automaticallyImplyLeading: false,
       elevation: 0,
       backgroundColor: Colors.transparent,
+      actions: [
+        GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, "/search");
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right:15.0),
+              child: Icon(
+                Icons.search_outlined,
+              ),
+            ),),
+            
+      ],
+      leading: GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, "/");
+          },
+          child: Icon(
+            Icons.near_me,
+          )),
       title: Column(
         children: [
           SizedBox(
-            height: 12,
+            height: 8,
           ),
           _locationText(context),
           SizedBox(
