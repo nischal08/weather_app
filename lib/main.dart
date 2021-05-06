@@ -7,7 +7,7 @@ import 'package:weather_app/controller/weather_controller.dart';
 import 'package:weather_app/screens/city_screen.dart';
 import 'package:weather_app/screens/loading_screen.dart';
 
-import 'screens/home_screen.dart';
+import 'screens/weather_screen.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Weather App',
       theme: ThemeData(
         buttonColor: Colors.white,
@@ -69,7 +70,7 @@ class MyApp extends StatelessWidget {
       initialRoute: LoadingScreen.routeName,
       routes: {
         LoadingScreen.routeName: (context) => LoadingScreen(),
-        HomeScreen.routeName: (context) => HomeScreen(),
+        WeatherScreen.routeName: (context) => WeatherScreen(),
         CityScreen.routeName: (context) => CityScreen(),
       },
       supportedLocales: [

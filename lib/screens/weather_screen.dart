@@ -3,15 +3,15 @@ import 'package:intl/intl.dart';
 import 'package:weather_app/services/weather_api.dart';
 import 'package:weather_app/widgets/icon_with_text_row.dart';
 
-class HomeScreen extends StatelessWidget {
+class WeatherScreen extends StatelessWidget {
   static const routeName = '/home';
   var weatherModel;
   @override
   Widget build(BuildContext context) {
+    print(MediaQuery.of(context).size.height);
     weatherModel = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: _appBar(context),
+      appBar: null,
       body: _body(context),
     );
   }
@@ -28,9 +28,11 @@ class HomeScreen extends StatelessWidget {
               ),
               fit: BoxFit.cover)),
       child: SingleChildScrollView(
-              child: Column(
+        child: Column(
           children: [
-            _upperWeatherDetail(context),
+            MediaQuery.of(context).size.height < 790
+                ? _upperWeatherDetailSmallHeightDevice(context)
+                : _upperWeatherDetailBigHeightDevice(context),
             _lowerWeatherDetail(context),
           ],
         ),
@@ -38,40 +40,81 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Container _upperWeatherDetail(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 40),
-      height: MediaQuery.of(context).size.height * 0.62,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 130,
+  SafeArea _upperWeatherDetailSmallHeightDevice(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        height: MediaQuery.of(context).size.height * 0.62 -
+            MediaQuery.of(context).padding.top,
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // SizedBox(
+              //   height: 130,
+              // ),
+              _customAppbar(context),
+              SizedBox(
+                height: 10,
+              ),
+              _weatherConditionIconWithText(context),
+              SizedBox(
+                height: 10,
+              ),
+              _weatherDegree(context),
+              SizedBox(
+                height: 10,
+              ),
+              weatherDetailInfo(context),
+              SizedBox(
+                height: 10,
+              ),
+              _helpNote(context),
+            ],
           ),
-          _weatherConditionIconWithText(context),
-          SizedBox(
-            height: 15,
-          ),
-          _weatherDegree(context),
-          SizedBox(
-            height: 20,
-          ),
-          weatherDetailInfo(context),
-          SizedBox(
-            height: 15,
-          ),
-          _helpNote(context),
-          SizedBox(
-            height: 5,
-          ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  SafeArea _upperWeatherDetailBigHeightDevice(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        height: MediaQuery.of(context).size.height * 0.62 -
+            MediaQuery.of(context).padding.top,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            _customAppbar(context),
+            SizedBox(
+              height: 20,
+            ),
+            _weatherConditionIconWithText(context),
+            SizedBox(
+              height: 20,
+            ),
+            _weatherDegree(context),
+            SizedBox(
+              height: 20,
+            ),
+            weatherDetailInfo(context),
+            SizedBox(
+              height: 20,
+            ),
+            _helpNote(context),
+          ],
+        ),
       ),
     );
   }
 
   Widget _lowerWeatherDetail(context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 40),
+      padding: EdgeInsets.symmetric(horizontal: 30),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topRight,
@@ -111,8 +154,8 @@ class HomeScreen extends StatelessWidget {
           itemBuilder: (context, index) {
             return _dayWeatherInfo(
                 context: context,
-                dayLabel:
-                    DateFormat.EEEE().format(weatherModel.data[index].datetime),
+                dayLabel: DateFormat.MMMMEEEEd()
+                    .format(weatherModel.data[index].datetime),
                 iconText: WeatherApi().getWeatherIcon(
                   weatherModel.data[index].weather.code,
                 ),
@@ -141,7 +184,7 @@ class HomeScreen extends StatelessWidget {
         textAlign: TextAlign.start,
         style: Theme.of(context)
             .textTheme
-            .headline4
+            .headline5
             .copyWith(color: Colors.white, fontWeight: FontWeight.w500),
       ),
     );
@@ -153,7 +196,7 @@ class HomeScreen extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Text(
               dayLabel,
               style: Theme.of(context).textTheme.headline5.copyWith(
@@ -163,7 +206,9 @@ class HomeScreen extends StatelessWidget {
           ),
           Expanded(
             flex: 1,
-            child: Text(iconText, style: Theme.of(context).textTheme.headline5),
+            child: Text(iconText,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline5),
           ),
           Expanded(flex: 2, child: _tempRow(highTemp, context, lowTemp))
         ],
@@ -175,11 +220,14 @@ class HomeScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Text(
-          "$highTemp°",
-          style: Theme.of(context).textTheme.headline5.copyWith(
-              color: Colors.white.withOpacity(0.9),
-              fontWeight: FontWeight.w400),
+        Padding(
+          padding: const EdgeInsets.only(left: 6.0),
+          child: Text(
+            "$highTemp°",
+            style: Theme.of(context).textTheme.headline5.copyWith(
+                color: Colors.white.withOpacity(0.9),
+                fontWeight: FontWeight.w400),
+          ),
         ),
         Text(
           "$lowTemp°",
@@ -193,16 +241,21 @@ class HomeScreen extends StatelessWidget {
 
   Widget _helpNote(BuildContext context) {
     return Container(
-      child: Text(
-          WeatherApi().getMessage(
-            weatherModel.data.first.temp.toInt(),
-          ),
-          style: Theme.of(context)
+        child: Text(
+      WeatherApi().getMessage(
+        weatherModel.data.first.temp.toInt(),
+      ),
+      textAlign: TextAlign.left,
+      style: MediaQuery.of(context).size.height < 790
+          ? Theme.of(context)
+              .textTheme
+              .headline4
+              .copyWith(color: Colors.white, fontWeight: FontWeight.w400)
+          : Theme.of(context)
               .textTheme
               .headline2
               .copyWith(color: Colors.white, fontWeight: FontWeight.w400),
-          textAlign: TextAlign.left),
-    );
+    ));
   }
 
   Container weatherDetailInfo(context) {
@@ -230,10 +283,10 @@ class HomeScreen extends StatelessWidget {
 
   Widget _weatherDegree(context) {
     return Text(
-      "${weatherModel.data.first.temp.toInt()}°C",
+      "${weatherModel.data.first.temp}°C",
       style: TextStyle(
         color: Colors.white,
-        fontSize: 55,
+        fontSize: 40,
       ),
     );
   }
@@ -244,7 +297,8 @@ class HomeScreen extends StatelessWidget {
         Text(
           WeatherApi()
               .getWeatherIcon(weatherModel.data.first.weather.code.toInt()),
-          style: TextStyle(fontSize: 100),
+          style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height < 790 ? 70 : 90),
         ),
         SizedBox(
           height: 10,
@@ -258,8 +312,8 @@ class HomeScreen extends StatelessWidget {
               weatherModel.data.first.weather.description,
               style: Theme.of(context)
                   .textTheme
-                  .headline5
-                  .copyWith(color: Colors.white),
+                  .headline6
+                  .copyWith(color: Colors.white, fontWeight: FontWeight.w400),
             ),
           ),
         )
@@ -267,55 +321,58 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  AppBar _appBar(context) {
-    return AppBar(
-      centerTitle: true,
-      automaticallyImplyLeading: false,
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      actions: [
+  Row _customAppbar(context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
         GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, "/search");
+              Navigator.pushNamed(context, "/");
             },
-            child: Padding(
-              padding: const EdgeInsets.only(right:15.0),
-              child: Icon(
-                Icons.search_outlined,
+            child: Icon(
+              Icons.near_me,
+              color: Colors.white,
+            )),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.70,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 8,
               ),
-            ),),
-            
-      ],
-      leading: GestureDetector(
+              _locationText(context),
+              SizedBox(
+                height: 5,
+              ),
+              _locationInfo(context)
+            ],
+          ),
+        ),
+        GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, "/");
+            Navigator.pushNamed(context, "/search");
           },
           child: Icon(
-            Icons.near_me,
-          )),
-      title: Column(
-        children: [
-          SizedBox(
-            height: 8,
+            Icons.search_outlined,
+            color: Colors.white,
           ),
-          _locationText(context),
-          SizedBox(
-            height: 5,
-          ),
-          _locationInfo(context)
-        ],
-      ),
+        )
+      ],
     );
   }
 
   Text _locationInfo(context) {
     return Text(
-      "${weatherModel.cityName}, ${weatherModel.stateCode}, ${weatherModel.countryCode}",
-      style: Theme.of(context).textTheme.headline4.copyWith(
-            color: Colors.white.withOpacity(0.9),
-            fontWeight: FontWeight.w500,
-          ),
-    );
+        "${weatherModel.cityName}, ${weatherModel.stateCode}, ${weatherModel.countryCode}",
+        style: MediaQuery.of(context).size.height < 790
+            ? Theme.of(context).textTheme.headline5.copyWith(
+                  color: Colors.white.withOpacity(0.9),
+                  fontWeight: FontWeight.w500,
+                )
+            : Theme.of(context).textTheme.headline4.copyWith(
+                  color: Colors.white.withOpacity(0.9),
+                  fontWeight: FontWeight.w500,
+                ));
   }
 
   Row _locationText(context) {
@@ -325,7 +382,7 @@ class HomeScreen extends StatelessWidget {
         Icon(
           Icons.my_location,
           color: Colors.white70,
-          size: 20,
+          size: MediaQuery.of(context).size.height < 790 ? 16 : 20,
         ),
         SizedBox(
           width: 5,
@@ -334,6 +391,7 @@ class HomeScreen extends StatelessWidget {
           "Your Location Now",
           style: Theme.of(context).textTheme.caption.copyWith(
                 color: Colors.white70,
+                fontSize: MediaQuery.of(context).size.height < 790 ? 14 : 16,
               ),
         ),
       ],

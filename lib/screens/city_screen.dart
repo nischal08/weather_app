@@ -5,10 +5,19 @@ import 'package:weather_app/controller/city_screen_controller.dart';
 import 'package:weather_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 
-class CityScreen extends StatelessWidget {
-  CityScreenController _cityScreenController;
-  TextEditingController _cityNameTextController;
+class CityScreen extends StatefulWidget {
   static const routeName = "/search";
+
+  @override
+  _CityScreenState createState() => _CityScreenState();
+}
+
+class _CityScreenState extends State<CityScreen> {
+  CityScreenController _cityScreenController;
+
+  TextEditingController _cityNameTextController;
+  String countryCode;
+
   @override
   Widget build(BuildContext context) {
     _cityScreenController = Provider.of<CityScreenController>(context);
@@ -22,65 +31,65 @@ class CityScreen extends StatelessWidget {
 
   Center _circularSpinner(BuildContext context) {
     return Center(
-            child: SpinKitDoubleBounce(
-              color: Theme.of(context).primaryColor,
-              size: 100.0,
-            ),
-          );
+      child: SpinKitDoubleBounce(
+        color: Theme.of(context).primaryColor,
+        size: 100.0,
+      ),
+    );
   }
 
   Container _body(BuildContext context) {
     return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('images/city_background.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            constraints: BoxConstraints.expand(),
-            child: SafeArea(
-              child: Column(
-                children: <Widget>[
-                  _backBtn(context),
-                  _searchTextField(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Choose Country: ",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline3
-                            .copyWith(color: Colors.white),
-                      ),
-                      SizedBox(
-                        width: 70,
-                        height: 60,
-                        child: CountryCodePicker(
-                          onChanged: (e) {
-                            print(e.toCountryStringOnly());
-                          },
-                          onInit: (value) {
-                            print(value.code);
-                          },
-                          backgroundColor: Colors.white,
-                          hideMainText: true,
-                          showFlagMain: true,
-                          showFlag: false,
-                          initialSelection: 'NP',
-                          hideSearch: true,
-                          showCountryOnly: true,
-                          showOnlyCountryWhenClosed: false,
-                          alignLeft: false,
-                        ),
-                      ),
-                    ],
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('images/city_background.jpg'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      constraints: BoxConstraints.expand(),
+      child: SafeArea(
+        child: Column(
+          children: <Widget>[
+            _backBtn(context),
+            _searchTextField(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Choose Country: ",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline3
+                      .copyWith(color: Colors.white),
+                ),
+                SizedBox(
+                  width: 70,
+                  height: 60,
+                  child: CountryCodePicker(
+                    onChanged: (value) {
+                 if(value.code.isNotEmpty)  _cityScreenController.setCountryCode(value.code);
+                    },
+                    // onInit: (value) {
+                    //   _cityScreenController.setCountryCode(value.code);
+                    // },
+                    backgroundColor: Colors.white,
+                    hideMainText: true,
+                    showFlagMain: true,
+                    showFlag: true,
+                    initialSelection: 'GT',
+                    hideSearch: false,
+                    showCountryOnly: true,
+                    showOnlyCountryWhenClosed: false,
+                    alignLeft: false,
                   ),
-                  _getWeatherBtn(context),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
+            _getWeatherBtn(context),
+          ],
+        ),
+      ),
+    );
   }
 
   TextButton _getWeatherBtn(context) {
@@ -88,7 +97,8 @@ class CityScreen extends StatelessWidget {
       onPressed: () {
         debugPrint(_cityNameTextController.text);
         _cityScreenController.onClickgetWeather(
-          cityName: _cityNameTextController.text,
+         
+          cityName: _cityNameTextController.text.trim(),
           context: context,
         );
       },
@@ -122,7 +132,9 @@ class CityScreen extends StatelessWidget {
           alignment: Alignment.topLeft,
           child: TextButton(
             onPressed: () {
-              _cityScreenController.onClickBackBtn(context: context);
+              _cityScreenController.onClickBackBtn(
+                context: context,
+              );
             },
             child: Icon(
               Icons.arrow_back_ios,

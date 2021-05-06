@@ -27,7 +27,7 @@ class IconWithTextRow extends StatelessWidget {
             Text(
               label,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.headline4.copyWith(
+              style: Theme.of(context).textTheme.headline5.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w400,
                   ),

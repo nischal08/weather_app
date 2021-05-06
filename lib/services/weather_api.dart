@@ -6,15 +6,14 @@ import 'package:weather_app/services/networking.dart';
 import 'package:weather_app/utils/api_endpoints.dart';
 
 class WeatherApi {
-  Future getCityLocationWeather({String cityName}) async {
-    print("Weather api: getCityWeatherData");
-    debugPrint( "$baseUrl?city=$cityName&country=np&days=$totalForcastDays&key=$apiKey");
+  Future getCityLocationWeather({String cityName, String countryCode}) async {
     NetworkHelper networkHelper = new NetworkHelper(
       url:
-          "$baseUrl?city=$cityName&country=np&days=$totalForcastDays&key=$apiKey",
+          "$baseUrl?city=$cityName&country=$countryCode&days=$totalForcastDays&key=$apiKey",
     );
 
-    WeatherCityResponseModel weatherData = await networkHelper.getCityWeatherResponse();
+    WeatherCityResponseModel weatherData =
+        await networkHelper.getCityWeatherResponse();
     return weatherData;
   }
 

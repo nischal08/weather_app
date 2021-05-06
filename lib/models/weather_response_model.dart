@@ -119,7 +119,7 @@ class Datum {
     final int windDir;
     final dynamic maxDhi;
     final int cloudsHi;
-    final int precip;
+    final double precip;
     final double lowTemp;
     final double maxTemp;
     final int moonsetTs;
@@ -159,7 +159,7 @@ class Datum {
         windDir: json["wind_dir"],
         maxDhi: json["max_dhi"],
         cloudsHi: json["clouds_hi"],
-        precip: json["precip"],
+        precip: json["precip"].toDouble(),
         lowTemp: json["low_temp"].toDouble(),
         maxTemp: json["max_temp"].toDouble(),
         moonsetTs: json["moonset_ts"],

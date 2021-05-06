@@ -15,40 +15,40 @@ class NetworkHelper {
       );
 
       if (response.statusCode == 200) {
-        print("IF NetworkHelper: ${response.statusCode}");
+        print("getWeatherResponse NetworkHelper: ${response.statusCode}");
         WeatherResponseModel weatherModel;
         var jsonString = response.body;
-        print("Json String: $jsonString");
+
         var jsonDecoded = await json.decode(jsonString);
         weatherModel = WeatherResponseModel.fromJson(jsonDecoded);
-        print(weatherModel);
+        // print(weatherModel);
         return weatherModel;
       } else {
-        print("IF NetworkHelper: ");
+        print("getWeatherResponse NetworkHelper: ");
         print("Error:${response.statusCode.toString()}");
       }
     } catch (e) {
       print("Error NetworkHelper: $e");
     }
   }
+
   Future<WeatherCityResponseModel> getCityWeatherResponse() async {
     try {
       Response response = await get(
         Uri.parse(url),
       );
-
+      print(url);
       if (response.statusCode == 200) {
-        print("IF NetworkHelper: ${response.statusCode}");
+        print("getCityWeatherResponse NetworkHelper: ${response.statusCode}");
         WeatherCityResponseModel weatherModel;
         var jsonString = response.body;
-        print("Json String: $jsonString");
         var jsonDecoded = await json.decode(jsonString);
         weatherModel = WeatherCityResponseModel.fromJson(jsonDecoded);
         print(weatherModel);
         return weatherModel;
       } else {
-        print("IF NetworkHelper: ");
-        print("Error:${response.statusCode.toString()}");
+        print("getCityWeatherResponse NetworkHelper: ");
+        print("Error ErrorCode: ${response.statusCode.toString()}");
       }
     } catch (e) {
       print("Error NetworkHelper: $e");
